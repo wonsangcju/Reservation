@@ -24,7 +24,8 @@ import javax.swing.JPanel;
  * @changelog
  *            <ul>
  *            <li>2024.12.19 12:00 최초 생성</li>
- *            <li>2024.12.22 07:00 패널 별도의 메소드로 분리 분리</li>
+ *            <li>2024.12.22 07:00 패널 별도의 메소드로 분리</li>
+ *            <li>2024.12.22 08:00 메인패널을 메소드로 분리하고 다른 메소드들을 메인패널에 통합</li>
  *            </ul>
  */
 public class Main extends JFrame {
@@ -41,6 +42,11 @@ public class Main extends JFrame {
 		this.setLayout(new CardLayout());
 
 		//자리 예약을 할 수 있는 패널
+		
+		this.setVisible(true);
+	}
+	
+	public void mainPanel() {
 		mainPanel = new JPanel();
 		mainPanel.setBackground(Color.black);
 		
@@ -51,10 +57,6 @@ public class Main extends JFrame {
 		
 		this.add(mainPanel);
 
-		this.setVisible(true);
-	}
-	
-	public void topPanel() {
 		JPanel topPanel = new JPanel();
 		topPanel.setBackground(Color.gray);
 		
@@ -66,9 +68,7 @@ public class Main extends JFrame {
 		topPanel.add(menuButton);
 		
 		reservationPanel.add(topPanel, BorderLayout.NORTH);
-	}
-	
-	public void centerPanel() {
+		
 		JPanel seatPanel = new JPanel(new GridLayout(3, 3));
 		seatPanel.setBackground(Color.gray);
 		
@@ -92,10 +92,6 @@ public class Main extends JFrame {
 		new decorateButton(seat9, seatPanel, "9번", 80, 80, 80);
 		
 		reservationPanel.add(seatPanel, BorderLayout.CENTER);
-	}
-	
-	public void bottomPanel() {
-		
 	}
 	
 	public static void main(String[] args) {
