@@ -33,9 +33,11 @@ import javax.swing.JPanel;
  *            </ul>
  */
 public class Main extends JFrame {
+	public CardLayout cardLayout;
 	public JPanel mainPanel, reservationPanel, reservationCheckPanel;
 	public JLabel sentence;
 	public JButton menuButton, checkButton, seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9;
+	public String selectedSeat = "";
 	
 	public Main() {
 		this.setTitle("학생식당");
@@ -43,7 +45,8 @@ public class Main extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBackground(Color.green);
 		
-		this.setLayout(new CardLayout());
+		cardLayout = new CardLayout();
+		this.setLayout(cardLayout);
 
 		mainPanel();
 		reservationCheckPanel();
@@ -60,7 +63,7 @@ public class Main extends JFrame {
 		
 		mainPanel.add(reservationPanel);
 		
-		this.add(mainPanel);
+		this.add(mainPanel, "Reservation");
 
 		JPanel topPanel = new JPanel();
 		topPanel.setBackground(Color.gray);
@@ -123,19 +126,29 @@ public class Main extends JFrame {
 		reservationCheckPanel = new JPanel();
 		reservationCheckPanel.setBackground(Color.LIGHT_GRAY);
 		
-		this.add(reservationCheckPanel);
+		JLabel confirmLabel = new JLabel("예약이 완료되었습니다.");
+        confirmLabel.setFont(new Font("굴림 보통", Font.BOLD, 20));
+        confirmLabel.setHorizontalAlignment(JLabel.CENTER);
+        reservationCheckPanel.add(confirmLabel, BorderLayout.CENTER);
+		
+		this.add(reservationCheckPanel, "Confirm");
 	}
 	
 	public class seatButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JButton clickSeat = (JButton) e.getSource();
-			sentence.setText(clickSeat.getText() + " 좌석이 선택되었습니다.");
+			selectedSeat = clickSeat.getText();
+			sentence.setText(selectedSeat + " 좌석이 선택되었습니다.");
 		}
 	}
 	
 	public class checkButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			
+			if (!selectedSeat.isEmpty()) {
+                cardLayout.show(getContentPane(), "Confirm"); // 예약 확인 화면으로 전환
+            } else {
+                sentence.setText("좌석을 먼저 선택해주세요.");
+            }
 		}
 	}
 	
