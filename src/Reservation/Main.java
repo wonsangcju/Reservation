@@ -36,7 +36,7 @@ public class Main extends JFrame {
 	public CardLayout cardLayout;
 	public JPanel mainPanel, reservationPanel, reservationCheckPanel;
 	public JLabel sentence;
-	public JButton menuButton, checkButton, seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9;
+	public JButton menuButton, checkButton, homeButton, seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9;
 	public String selectedSeat = "";
 	
 	public Main() {
@@ -63,7 +63,7 @@ public class Main extends JFrame {
 		
 		mainPanel.add(reservationPanel);
 		
-		this.add(mainPanel, "Reservation");
+		this.add(mainPanel, "Main");
 
 		JPanel topPanel = new JPanel();
 		topPanel.setBackground(Color.gray);
@@ -126,11 +126,18 @@ public class Main extends JFrame {
 		reservationCheckPanel = new JPanel();
 		reservationCheckPanel.setBackground(Color.LIGHT_GRAY);
 		
+		homeButtonListener homeListener = new homeButtonListener();
+		
 		JLabel confirmLabel = new JLabel("예약이 완료되었습니다.");
         confirmLabel.setFont(new Font("굴림 보통", Font.BOLD, 20));
         confirmLabel.setHorizontalAlignment(JLabel.CENTER);
-        reservationCheckPanel.add(confirmLabel, BorderLayout.CENTER);
+        reservationCheckPanel.add(confirmLabel, BorderLayout.NORTH);
 		
+        JPanel homePanel = new JPanel();
+        homeButton = new JButton("");
+        new decorateButton(homeButton, homePanel, "홈으로", 80, 80, 80, homeListener);
+        reservationCheckPanel.add(homePanel, BorderLayout.SOUTH);
+        
 		this.add(reservationCheckPanel, "Confirm");
 	}
 	
@@ -149,6 +156,12 @@ public class Main extends JFrame {
             } else {
                 sentence.setText("좌석을 먼저 선택해주세요.");
             }
+		}
+	}
+	
+	public class homeButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			cardLayout.show(getContentPane(), "Main");
 		}
 	}
 	
