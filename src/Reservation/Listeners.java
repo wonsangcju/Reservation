@@ -58,4 +58,19 @@ public class Listeners {
             mainApp.cardLayout.show(mainApp.getContentPane(), "Main");
         }
     }
+    
+    //로그인 버튼 리스너
+    public class LoginButtonListener implements ActionListener {
+    	public void actionPerformed(ActionEvent e) {
+    		mainApp.cardLayout.show(mainApp.getContentPane(), "Main");
+    	}
+    }
+
+    //회원가입 버튼 리스너
+    public class registerButtonListener implements ActionListener {
+    	public void actionPerformed(ActionEvent e) {
+    		mainApp.cardLayout.show(mainApp.getContentPane(), "Register");
+    	}
+    }
 }
+
