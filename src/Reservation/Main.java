@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * 학생식당 자리 예약 및 식단 확인 프로그램
@@ -40,10 +41,11 @@ import javax.swing.JPanel;
  */
 public class Main extends JFrame {
 	public CardLayout cardLayout;
-	public JPanel mainPanel, reservationPanel, reservationCheckPanel;
+	public JPanel mainPanel, reservationPanel, reservationCheckPanel, loginPanel, registerPanel;
 	public JLabel sentence;
 	public JButton seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9;
 	public JButton menuButton, checkButton, homeButton, cancelButton;
+	public JTextField inputId, inputPassword;
 	public String selectedSeat = "";
 	
 	Listeners listeners;
@@ -59,6 +61,8 @@ public class Main extends JFrame {
 		cardLayout = new CardLayout();
 		this.setLayout(cardLayout);
 
+		loginPanel();
+		registerPanel();
 		mainPanel();
 		reservationCheckPanel();
 		
@@ -67,6 +71,8 @@ public class Main extends JFrame {
 	
 	public void mainPanel() {
 		/**
+		 * 예약을 할 수 있고 메인이 되는 패널
+		 * 
 		 * @changelog
 		 *            <ul>
 		 *            <li>2024.12.24 07:00 별도의 메소드로 분리</li>
@@ -145,6 +151,8 @@ public class Main extends JFrame {
 	
 	public void reservationCheckPanel() {
 		/** 
+		 *예약 완료 패널
+		 * 
 		 * @changelog
 		 *            <ul>
 		 *            <li>2024.12.22 16:00 최초 생성</li>
@@ -167,6 +175,62 @@ public class Main extends JFrame {
         reservationCheckPanel.add(homePanel, BorderLayout.SOUTH);
         
 		this.add(reservationCheckPanel, "Confirm");
+	}
+	
+	public void loginPanel() {
+		/** 
+		 * 로그인 패널
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.24 15:00 최초 생성</li>
+		 *            <ul>
+		 */
+		loginPanel = new JPanel();
+		loginPanel.setBackground(Color.white);
+		loginPanel.setLayout(new BorderLayout());
+		
+		JPanel labelPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+		JLabel idLabel = new JLabel("ID");
+		labelPanel.add(idLabel);
+		JLabel pwLabel = new JLabel("PW");
+		labelPanel.add(pwLabel);
+		
+		JPanel inputPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+		inputId = new JTextField(10);
+		inputPanel.add(inputId);
+		inputPassword = new JTextField(10);
+		inputPanel.add(inputPassword);
+
+		JPanel loginRegisterPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+		JButton loginButton = new JButton();
+		new decorateButton(loginButton, loginRegisterPanel, "로그인", 80, 80, 80, listeners.new LoginButtonListener());
+		JButton registerButton = new JButton();
+		new decorateButton(registerButton, loginRegisterPanel, "회원가입", 80, 80, 80, listeners.new HomeButtonListener());
+		
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.add(labelPanel, BorderLayout.WEST);
+		centerPanel.add(inputPanel, BorderLayout.CENTER);
+		centerPanel.add(loginRegisterPanel, BorderLayout.EAST);
+		centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(100, 50, 100, 50));
+		
+		loginPanel.add(centerPanel, BorderLayout.CENTER);
+		
+		this.add(loginPanel, "Login");
+	}
+	
+	public void registerPanel() {
+		/** 
+		 * 회원가입 패널
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.24 22:00 최초 생성</li>
+		 *            <ul>
+		 */
+		registerPanel = new JPanel();
+		
+		this.add(registerPanel, "Register");
 	}
 	
 	public void saveReservation(String seat) {
