@@ -35,6 +35,7 @@ import javax.swing.JPanel;
  *            <li>2024.12.19 12:00 최초 생성</li>
  *            <li>2024.12.22 07:00 패널 별도의 메소드로 분리</li>
  *            <li>2024.12.22 08:00 메인패널을 메소드로 분리하고 다른 메소드들을 메인패널에 통합</li>
+ *            <li>2024.12.23 23:00 리스너들을 별도의 클래스로 분리</li>
  *            </ul>
  */
 public class Main extends JFrame {
@@ -65,6 +66,13 @@ public class Main extends JFrame {
 	}
 	
 	public void mainPanel() {
+		/**
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.24 07:00 별도의 메소드로 분리</li>
+		 *            <li>2024.12.22 08:00 다른 메소드들을 메인패널에 통합</li>
+		 *            <ul>
+		 */
 		mainPanel = new JPanel();
 		mainPanel.setBackground(Color.black);
 		
@@ -97,7 +105,6 @@ public class Main extends JFrame {
 		seatPanel.setBackground(Color.gray);
 		
 		//좌석 버튼
-		
 		seat1 = new JButton();
 		new decorateButton(seat1, seatPanel, "1번", 80, 80, 80, listeners.new SeatButtonListener());
 		seat2 = new JButton();
@@ -124,14 +131,12 @@ public class Main extends JFrame {
 		checkPanel.setBackground(Color.gray);
 		
 		//예약확인 버튼
-		
 		checkButton = new JButton();
 		new decorateButton(checkButton, checkPanel, "예약", 80, 80, 80, listeners.new CheckButtonListener());
 		checkButton.setPreferredSize(new Dimension(100, 50));
 		reservationPanel.add(checkPanel, BorderLayout.SOUTH);
 		
 		//예약취소 버튼
-		
 		cancelButton = new JButton();
 		new decorateButton(cancelButton, checkPanel, "예약 취소", 80, 80, 80, listeners.new CancelButtonListener());
 		cancelButton.setPreferredSize(new Dimension(100, 50));
@@ -139,14 +144,23 @@ public class Main extends JFrame {
 	}
 	
 	public void reservationCheckPanel() {
+		/** 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.22 16:00 최초 생성</li>
+		 *            <li>2024.12.22 18:00 홈 버튼 추가</li>
+		 *            <ul>
+		 */
 		reservationCheckPanel = new JPanel();
 		reservationCheckPanel.setBackground(Color.LIGHT_GRAY);
 		
+		//예약 완료 문구
 		JLabel confirmLabel = new JLabel("예약이 완료되었습니다.");
         confirmLabel.setFont(new Font("굴림 보통", Font.BOLD, 20));
         confirmLabel.setHorizontalAlignment(JLabel.CENTER);
         reservationCheckPanel.add(confirmLabel, BorderLayout.NORTH);
 		
+        //홈 버튼
         JPanel homePanel = new JPanel();
         homeButton = new JButton("");
         new decorateButton(homeButton, homePanel, "홈으로", 80, 80, 80, listeners.new HomeButtonListener());
@@ -156,6 +170,14 @@ public class Main extends JFrame {
 	}
 	
 	public void saveReservation(String seat) {
+		/** 
+		 * 예약 시 예약시간과 예약한 좌석이 csv에 작성되게 하는 메소드
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.23 22:00 최초 생성</li>
+		 *            <ul>
+		 */
         String filePath = "seat/reservations.csv";
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -171,6 +193,14 @@ public class Main extends JFrame {
     }
 	
 	public void cancelReservationInCSV(String seat) {
+		/** 
+		 * 예약을 취소할 경우 예약 시 작성됐던 내용이 csv에서 삭제되는 메소드
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.23 22:00 최초 생성</li>
+		 *            <ul>
+		 */
 	    String filePath = "seat/reservations.csv";
 	    StringBuilder updatedData = new StringBuilder();
 
