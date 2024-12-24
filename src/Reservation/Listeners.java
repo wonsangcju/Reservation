@@ -5,13 +5,21 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class Listeners {
-
+	/**
+	 * 리스너를 모아놓은 클래스
+	 * 
+	 * @changelog
+	 * <ul>
+	 * 	<li>2024.12.23 23:00 최초 생성</li>
+	 * </ul>
+	 */
     private Main mainApp;
 
     public Listeners(Main mainApp) {
         this.mainApp = mainApp;
     }
 
+    //좌석 버튼 리스너
     public class SeatButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JButton clickedSeat = (JButton) e.getSource();
@@ -20,6 +28,7 @@ public class Listeners {
         }
     }
 
+    //예약확인 버튼 리스너
     public class CheckButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (!mainApp.selectedSeat.isEmpty()) {
@@ -31,6 +40,7 @@ public class Listeners {
         }
     }
 
+    //예약취소 버튼 리스너
     public class CancelButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (!mainApp.selectedSeat.isEmpty()) {
@@ -42,6 +52,7 @@ public class Listeners {
         }
     }
 
+    //홈 버튼 리스너
     public class HomeButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             mainApp.cardLayout.show(mainApp.getContentPane(), "Main");
