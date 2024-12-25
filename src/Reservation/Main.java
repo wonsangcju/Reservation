@@ -76,7 +76,52 @@ public class Main extends JFrame {
 		cardLayout.show(this.getContentPane(), "Login");
 
 		this.setVisible(true);
+	}	
+	
+	public void loginPanel() {
+		/**
+		 * 로그인 패널
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.24 15:00 최초 생성</li>
+		 *            <ul>
+		 */
+		loginPanel = new JPanel();
+		loginPanel.setBackground(Color.white);
+		loginPanel.setLayout(new BorderLayout());
+
+		JPanel labelPanel = new JPanel(new GridLayout(2, 1));
+		JLabel idLabel = new JLabel("아이디");
+		labelPanel.add(idLabel);
+		JLabel pwLabel = new JLabel("비밀번호 ");
+		labelPanel.add(pwLabel);
+
+		JPanel inputPanel = new JPanel(new GridLayout(2, 1));
+		inputId = new JTextField(10);
+		inputPanel.add(inputId);
+		inputPassword = new JPasswordField(10);
+		inputPanel.add(inputPassword);
+		
+		JPanel loginRegisterPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+		JButton loginButton = new JButton();
+		new decorateButton(loginButton, loginRegisterPanel, "로그인", 80, 80, 80,
+				listeners.new LoginButtonListener(inputId, inputPassword, cardLayout, this.getContentPane()));
+		JButton registerButton = new JButton();
+		new decorateButton(registerButton, loginRegisterPanel, "회원가입", 80, 80, 80,
+				listeners.new RegisterButtonListener());
+
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.add(labelPanel, BorderLayout.WEST);
+		centerPanel.add(inputPanel, BorderLayout.CENTER);
+		centerPanel.add(loginRegisterPanel, BorderLayout.EAST);
+		centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(100, 50, 100, 50));
+
+		loginPanel.add(centerPanel, BorderLayout.CENTER);
+
+		this.add(loginPanel, "Login");
 	}
+
 
 	public void mainPanel() {
 		/**
@@ -188,49 +233,6 @@ public class Main extends JFrame {
 		this.add(reservationCheckPanel, "Confirm");
 	}
 
-	public void loginPanel() {
-		/**
-		 * 로그인 패널
-		 * 
-		 * @changelog
-		 *            <ul>
-		 *            <li>2024.12.24 15:00 최초 생성</li>
-		 *            <ul>
-		 */
-		loginPanel = new JPanel();
-		loginPanel.setBackground(Color.white);
-		loginPanel.setLayout(new BorderLayout());
-
-		JPanel labelPanel = new JPanel(new GridLayout(2, 1));
-		JLabel idLabel = new JLabel("아이디");
-		labelPanel.add(idLabel);
-		JLabel pwLabel = new JLabel("비밀번호 ");
-		labelPanel.add(pwLabel);
-
-		JPanel inputPanel = new JPanel(new GridLayout(2, 1));
-		inputId = new JTextField(10);
-		inputPanel.add(inputId);
-		inputPassword = new JPasswordField(10);
-		inputPanel.add(inputPassword);
-		
-		JPanel loginRegisterPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-		JButton loginButton = new JButton();
-		new decorateButton(loginButton, loginRegisterPanel, "로그인", 80, 80, 80,
-				listeners.new LoginButtonListener(inputId, inputPassword, loginPanel, cardLayout, mainPanel));
-		JButton registerButton = new JButton();
-		new decorateButton(registerButton, loginRegisterPanel, "회원가입", 80, 80, 80,
-				listeners.new RegisterButtonListener());
-
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.add(labelPanel, BorderLayout.WEST);
-		centerPanel.add(inputPanel, BorderLayout.CENTER);
-		centerPanel.add(loginRegisterPanel, BorderLayout.EAST);
-		centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(100, 50, 100, 50));
-
-		loginPanel.add(centerPanel, BorderLayout.CENTER);
-
-		this.add(loginPanel, "Login");
-	}
 
 	public void registerPanel() {
 		/**
