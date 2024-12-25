@@ -75,16 +75,15 @@ public class Listeners {
 	public class LoginButtonListener implements ActionListener {
 	    private JTextField inputId;
 	    private JPasswordField inputPassword;
-	    private JPanel loginPanel, mainPanel;
 	    private CardLayout cardLayout;
+	    private Container mainContainer;
 
-	    public LoginButtonListener(JTextField inputId, JPasswordField inputPassword, JPanel loginPanel,
-	                               CardLayout cardLayout, JPanel mainPanel) {
+	    public LoginButtonListener(JTextField inputId, JPasswordField inputPassword,
+	                               CardLayout cardLayout, Container mainContainer) {
 	        this.inputId = inputId;
 	        this.inputPassword = inputPassword;
-	        this.loginPanel = loginPanel;
 	        this.cardLayout = cardLayout;
-	        this.mainPanel = mainPanel;
+	        this.mainContainer = mainContainer; 
 	    }
 
 	    @Override
@@ -93,15 +92,15 @@ public class Listeners {
 	        String password = new String(inputPassword.getPassword()).trim();
 
 	        if (id.isEmpty() || password.isEmpty()) {
-	            JOptionPane.showMessageDialog(loginPanel, "아이디와 비밀번호를 모두 입력해주세요.", "경고", JOptionPane.WARNING_MESSAGE);
+	            JOptionPane.showMessageDialog(mainContainer, "아이디와 비밀번호를 모두 입력해주세요.", "경고", JOptionPane.WARNING_MESSAGE);
 	            return;
 	        }
 
 	        if (isLoginValid(id, password)) {
-	            JOptionPane.showMessageDialog(loginPanel, "로그인에 성공했습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-	            cardLayout.show(mainPanel, "Main");
+	            JOptionPane.showMessageDialog(mainContainer, "로그인에 성공했습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
+	            cardLayout.show(mainContainer, "Main");
 	        } else {
-	            JOptionPane.showMessageDialog(loginPanel, "아이디 또는 비밀번호가 일치하지 않습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+	            JOptionPane.showMessageDialog(mainContainer, "아이디 또는 비밀번호가 일치하지 않습니다.", "오류", JOptionPane.ERROR_MESSAGE);
 	        }
 	    }
 	}
