@@ -367,7 +367,7 @@ public class Main extends JFrame {
 		 *            <li>2024.12.25 23:00 최초 생성</li>
 		 *            <ul>
 		 */
-		foodMenuPanel = new JPanel(new GridLayout(7, 6));
+		foodMenuPanel = new JPanel(new GridLayout(7, 5));
 
 		// 첫 행은 요일
 		String[] days = { "월", "화", "수", "목", "금" };
@@ -378,28 +378,44 @@ public class Main extends JFrame {
 			foodMenuPanel.add(label);
 		}
 
-		//menu.csv에서 식단을 읽어와서 표시한다.
+		// menu.csv에서 식단을 읽어와서 표시한다.
 		String filePath = "menu/menu.csv";
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			// CSV 파일의 각 줄을 읽어서 열 기준으로 요일에 맞는 위치에 추가
 			String line;
+			String[][] menuGrid = new String[5][5]; // 5행 5열로 구성된 배열
 			int rowIndex = 0;
-			while ((line = reader.readLine()) != null) {
-				String[] menuItems = line.split(",");
 
-				// 각 요일별로 식단을 추가
-				for (int i = 0; i < menuItems.length; i++) {
-					JLabel label = new JLabel(menuItems[i]);
+			while ((line = reader.readLine()) != null && rowIndex < 5) {
+				String[] menuItems = line.split(",");
+				for (int colIndex = 0; colIndex < menuItems.length && colIndex < 5; colIndex++) {
+					menuGrid[rowIndex][colIndex] = menuItems[colIndex]; // 각 항목을 배열에 저장
+				}
+				rowIndex++;
+			}
+
+			// 저장된 데이터를 패널에 추가
+			for (int colIndex = 0; colIndex < 5; colIndex++) { // 각 열(요일)에 대해
+				for (rowIndex = 0; rowIndex < 5; rowIndex++) { // 각 행(데이터 줄)에 대해
+					JLabel label = new JLabel(menuGrid[rowIndex][colIndex]);
 					label.setHorizontalAlignment(SwingConstants.CENTER);
 					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					foodMenuPanel.add(label);
 				}
-				rowIndex++; // 다음 행으로 넘어가기
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
+		// 홈버튼 추가
+		JLabel gapLabel1 = new JLabel(""); // 홈버튼이 3열에 가게 하기 위해 공백 라벨 추가
+		foodMenuPanel.add(gapLabel1);
+		JLabel gapLabel2 = new JLabel("");
+		foodMenuPanel.add(gapLabel2);
+		JButton homeButton = new JButton();
+		new decorateButton(homeButton, foodMenuPanel, "메인 화면", 80, 80, 80, listeners.new HomeButtonListener());
+		
 		this.add(foodMenuPanel, "FoodMenu");
 	}
 
