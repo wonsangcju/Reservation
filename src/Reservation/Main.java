@@ -407,7 +407,7 @@ public class Main extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// 홈버튼 추가
 		JLabel gapLabel1 = new JLabel(""); // 홈버튼이 3열에 가게 하기 위해 공백 라벨 추가
 		foodMenuPanel.add(gapLabel1);
@@ -415,7 +415,7 @@ public class Main extends JFrame {
 		foodMenuPanel.add(gapLabel2);
 		JButton homeButton = new JButton();
 		new decorateButton(homeButton, foodMenuPanel, "메인 화면", 80, 80, 80, listeners.new HomeButtonListener());
-		
+
 		this.add(foodMenuPanel, "FoodMenu");
 	}
 
