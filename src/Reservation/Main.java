@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  * 학생식당 자리 예약 및 식단 확인 프로그램
@@ -51,14 +53,15 @@ import javax.swing.JTextField;
  */
 public class Main extends JFrame {
 	public CardLayout cardLayout;
-	public JPanel mainPanel, reservationPanel, reservationCheckPanel, loginPanel, registerPanel;
+	public JPanel mainPanel, reservationPanel, reservationCheckPanel, loginPanel, registerPanel, menuPanel,
+			foodMenuPanel;
 	public JLabel sentence;
 	public JButton seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9;
 	public JButton menuButton, checkButton, homeButton, cancelButton;
 	public JTextField inputId;
 	public JPasswordField inputPassword;
 	public String selectedSeat = "";
-	
+
 	private Map<String, String> seatReservationMap = new HashMap<>();
 
 	Listeners listeners;
@@ -70,7 +73,7 @@ public class Main extends JFrame {
 		this.setSize(400, 465);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBackground(Color.green);
-		
+
 		// 아이콘 변경
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Image img = kit.getImage("img/cju.png");
@@ -78,17 +81,19 @@ public class Main extends JFrame {
 
 		cardLayout = new CardLayout();
 		this.setLayout(cardLayout);
-		
+
 		mainPanel();
 		loginPanel();
 		registerPanel();
 		reservationCheckPanel();
-		
+		menuPanel();
+		foodMenuPanel();
+
 		cardLayout.show(this.getContentPane(), "Login");
 
 		this.setVisible(true);
-	}	
-	
+	}
+
 	public void loginPanel() {
 		/**
 		 * 로그인 패널
@@ -113,7 +118,7 @@ public class Main extends JFrame {
 		inputPanel.add(inputId);
 		inputPassword = new JPasswordField(10);
 		inputPanel.add(inputPassword);
-		
+
 		JPanel loginRegisterPanel = new JPanel(new GridLayout(2, 1, 10, 10));
 		JButton loginButton = new JButton();
 		new decorateButton(loginButton, loginRegisterPanel, "로그인", 80, 80, 80,
@@ -132,7 +137,6 @@ public class Main extends JFrame {
 
 		this.add(loginPanel, "Login");
 	}
-
 
 	public void mainPanel() {
 		/**
@@ -164,6 +168,7 @@ public class Main extends JFrame {
 		menuButton = new JButton(listIcon);
 		menuButton.setPreferredSize(new Dimension(40, 40));
 		menuButton.setBorder(null);
+		menuButton.addActionListener(e -> cardLayout.show(this.getContentPane(), "Menu"));
 		topPanel.add(menuButton);
 
 		sentence = new JLabel("예약을 원하는 좌석을 선택해주세요.");
@@ -244,7 +249,6 @@ public class Main extends JFrame {
 		this.add(reservationCheckPanel, "Confirm");
 	}
 
-
 	public void registerPanel() {
 		/**
 		 * 회원가입 패널
@@ -279,13 +283,13 @@ public class Main extends JFrame {
 		new decorateButton(checkDuplicateButton, centerPanel, "중복 검사", 80, 80, 80,
 				listeners.new CheckDuplicateListener(txtId, registerPanel));
 		checkDuplicateButton.setFont(new Font("Seoge UI", Font.PLAIN, 13));
-		
+
 		// 회원가입 완료 버튼
 		JButton confirmButton = new JButton();
 		new decorateButton(confirmButton, buttonPanel, "<html><div style='text-align: center;'>회원가입<br>완료</div></html>",
 				80, 80, 80, listeners.new ConfirmRegisterListener(txtId, txtPassword, registerPanel, cardLayout,
 						this.getContentPane()));
-		
+
 		// 회원가입 취소 버튼
 		JButton cancelButton = new JButton();
 		new decorateButton(cancelButton, buttonPanel, "취소", 80, 80, 80,
@@ -331,6 +335,74 @@ public class Main extends JFrame {
 		this.add(registerPanel, "Register");
 	}
 
+	public void menuPanel() {
+		/**
+		 * 여러 화면으로 이동할 수 있는 메뉴 패널
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.25 22:00 최초 생성</li>
+		 *            <ul>
+		 */
+		menuPanel = new JPanel(new GridLayout(3, 1, 5, 5));
+
+		JButton mainPanelButton = new JButton();
+		new decorateButton(mainPanelButton, menuPanel, "메인 화면", 80, 80, 80, listeners.new HomeButtonListener());
+		JButton loginPanelButton = new JButton();
+		new decorateButton(loginPanelButton, menuPanel, "로그인 화면", 80, 80, 80,
+				e -> cardLayout.show(this.getContentPane(), "Login"));
+		JButton foodMenuButton = new JButton();
+		new decorateButton(foodMenuButton, menuPanel, "식단표", 80, 80, 80,
+				e -> cardLayout.show(this.getContentPane(), "FoodMenu"));
+
+		this.add(menuPanel, "Menu");
+	}
+
+	public void foodMenuPanel() {
+		/**
+		 * 일주일간의 식단표가 표시되는 패널
+		 * 
+		 * @changelog
+		 *            <ul>
+		 *            <li>2024.12.25 23:00 최초 생성</li>
+		 *            <ul>
+		 */
+		foodMenuPanel = new JPanel(new GridLayout(7, 6));
+
+		// 첫 행은 요일
+		String[] days = { "월", "화", "수", "목", "금" };
+		for (String day : days) {
+			JLabel label = new JLabel(day);
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			foodMenuPanel.add(label);
+		}
+
+		//menu.csv에서 식단을 읽어와서 표시한다.
+		String filePath = "menu/menu.csv";
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			String line;
+			int rowIndex = 0;
+			while ((line = reader.readLine()) != null) {
+				String[] menuItems = line.split(",");
+
+				// 각 요일별로 식단을 추가
+				for (int i = 0; i < menuItems.length; i++) {
+					JLabel label = new JLabel(menuItems[i]);
+					label.setHorizontalAlignment(SwingConstants.CENTER);
+					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					foodMenuPanel.add(label);
+				}
+				rowIndex++; // 다음 행으로 넘어가기
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		this.add(foodMenuPanel, "FoodMenu");
+	}
+
 	public void saveReservation(String seat) {
 		/**
 		 * 예약 시 예약시간과 예약한 좌석이 csv에 작성되게 하는 메소드
@@ -341,13 +413,13 @@ public class Main extends JFrame {
 		 *            <li>2024.12.25 22:00 해시맵 기반으로 변경</li>
 		 *            <ul>
 		 */
-		 LocalDateTime now = LocalDateTime.now();
-		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		    String timestamp = now.format(formatter);
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String timestamp = now.format(formatter);
 
-		    seatReservationMap.put(seat, timestamp);
-		    saveCSV();
-		    System.out.println("예약 완료: 좌석 = " + seat + ", 시간 ="  + timestamp);
+		seatReservationMap.put(seat, timestamp);
+		saveCSV();
+		System.out.println("예약 완료 좌석 = " + seat + ", 시간 = " + timestamp);
 	}
 
 	public void cancelReservation(String seat) {
@@ -361,41 +433,41 @@ public class Main extends JFrame {
 		 *            <ul>
 		 */
 		if (seatReservationMap.containsKey(seat)) {
-            seatReservationMap.remove(seat);
-            System.out.println("예약 취소 완료: 좌석 = " + seat);
-        } else {
-            System.out.println("취소할 예약이 없습니다");
-        }
+			seatReservationMap.remove(seat);
+			System.out.println("예약 취소 완료 좌석 = " + seat);
+		} else {
+			System.out.println("취소할 예약이 없습니다");
+		}
 
-        saveCSV();
+		saveCSV();
 	}
 
 	public void loadCSV() {
 		String filePath = "seat/reservations.csv";
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    seatReservationMap.put(parts[1], parts[0]); // 좌석 번호를 키, 예약 시간을 값으로 설정
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				String[] parts = line.split(",");
+				if (parts.length == 2) {
+					seatReservationMap.put(parts[1], parts[0]); // 좌석 번호를 키, 예약 시간을 값으로 설정
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void saveCSV() {
-		 String filePath = "seat/reservations.csv";
-	        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
-	            for (Map.Entry<String, String> entry : seatReservationMap.entrySet()) {
-	                writer.write(entry.getValue() + "," + entry.getKey() + "\n");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+		String filePath = "seat/reservations.csv";
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+			for (Map.Entry<String, String> entry : seatReservationMap.entrySet()) {
+				writer.write(entry.getValue() + "," + entry.getKey() + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public static void main(String[] args) {
 		new Main();
 	}
