@@ -458,6 +458,14 @@ public class Main extends JFrame {
 		saveCSV();
 	}
 
+	/**
+	 * csv에 저장하고 불러오는 메소드
+	 * 
+	 * @changelog
+	 *            <ul>
+	 *            <li>2024.12.25 22:00 최초 생성</li>
+	 *            <ul>
+	 */
 	public void loadCSV() {
 		String filePath = "seat/reservations.csv";
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
