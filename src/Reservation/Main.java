@@ -3,14 +3,15 @@ package Reservation;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -18,6 +19,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -43,6 +46,7 @@ import javax.swing.JTextField;
  *            <li>2024.12.22 07:00 패널 별도의 메소드로 분리</li>
  *            <li>2024.12.22 08:00 메인패널을 메소드로 분리하고 다른 메소드들을 메인패널에 통합</li>
  *            <li>2024.12.23 23:00 리스너들을 별도의 클래스로 분리</li>
+ *            <li>2024.12.25 22:00 해시맵 기반으로 변경</li>
  *            </ul>
  */
 public class Main extends JFrame {
@@ -54,6 +58,8 @@ public class Main extends JFrame {
 	public JTextField inputId;
 	public JPasswordField inputPassword;
 	public String selectedSeat = "";
+	
+	private Map<String, String> seatReservationMap = new HashMap<>();
 
 	Listeners listeners;
 
@@ -64,6 +70,11 @@ public class Main extends JFrame {
 		this.setSize(400, 465);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBackground(Color.green);
+		
+		// 아이콘 변경
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Image img = kit.getImage("img/cju.png");
+		this.setIconImage(img);
 
 		cardLayout = new CardLayout();
 		this.setLayout(cardLayout);
@@ -215,7 +226,7 @@ public class Main extends JFrame {
 		 *            <li>2024.12.22 18:00 홈 버튼 추가</li>
 		 *            <ul>
 		 */
-		reservationCheckPanel = new JPanel();
+		reservationCheckPanel = new JPanel(new BorderLayout());
 		reservationCheckPanel.setBackground(Color.LIGHT_GRAY);
 
 		// 예약 완료 문구
@@ -327,52 +338,64 @@ public class Main extends JFrame {
 		 * @changelog
 		 *            <ul>
 		 *            <li>2024.12.23 22:00 최초 생성</li>
+		 *            <li>2024.12.25 22:00 해시맵 기반으로 변경</li>
 		 *            <ul>
 		 */
-		String filePath = "seat/reservations.csv";
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String timestamp = now.format(formatter);
+		 LocalDateTime now = LocalDateTime.now();
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		    String timestamp = now.format(formatter);
 
-		String data = timestamp + "," + seat + "\n";
-
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-			writer.write(data);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		    seatReservationMap.put(seat, timestamp);
+		    saveCSV();
+		    System.out.println("예약 완료: 좌석 = " + seat + ", 시간 ="  + timestamp);
 	}
 
-	public void cancelReservationInCSV(String seat) {
+	public void cancelReservation(String seat) {
 		/**
-		 * 예약을 취소할 경우 예약 시 작성됐던 내용이 csv에서 삭제되는 메소드
+		 * 예약 취소 메소드
 		 * 
 		 * @changelog
 		 *            <ul>
 		 *            <li>2024.12.23 22:00 최초 생성</li>
+		 *            <li>2024.12.25 22:00 해시맵 기반으로 변경</li>
 		 *            <ul>
 		 */
-		String filePath = "seat/reservations.csv";
-		StringBuilder updatedData = new StringBuilder();
+		if (seatReservationMap.containsKey(seat)) {
+            seatReservationMap.remove(seat);
+            System.out.println("예약 취소 완료: 좌석 = " + seat);
+        } else {
+            System.out.println("취소할 예약이 없습니다");
+        }
 
-		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (!line.contains("," + seat)) { // 선택된 좌석이 아닌 경우만 추가
-					updatedData.append(line).append("\n");
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
-			writer.write(updatedData.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        saveCSV();
 	}
 
+	public void loadCSV() {
+		String filePath = "seat/reservations.csv";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    seatReservationMap.put(parts[1], parts[0]); // 좌석 번호를 키, 예약 시간을 값으로 설정
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+
+	public void saveCSV() {
+		 String filePath = "seat/reservations.csv";
+	        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+	            for (Map.Entry<String, String> entry : seatReservationMap.entrySet()) {
+	                writer.write(entry.getValue() + "," + entry.getKey() + "\n");
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	}
+	
 	public static void main(String[] args) {
 		new Main();
 	}
