@@ -216,7 +216,7 @@ public class Main extends JFrame {
 
 		// 예약취소 버튼
 		cancelButton = new JButton();
-		new decorateButton(cancelButton, checkPanel, "예약 취소", 80, 80, 80, listeners.new CancelButtonListener(this));
+		new decorateButton(cancelButton, checkPanel, "예약 취소", 80, 80, 80, listeners.new CancelButtonListener());
 		cancelButton.setPreferredSize(new Dimension(100, 50));
 
 	}
