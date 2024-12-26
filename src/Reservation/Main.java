@@ -39,8 +39,7 @@ import javax.swing.SwingConstants;
  * @version 1.0
  * 
  * @created 2024.12.19
- * @lastModified 2024.12.22
- * 
+ * @lastModified 2024.12.26
  *
  * @changelog
  *            <ul>
@@ -378,26 +377,24 @@ public class Main extends JFrame {
 			foodMenuPanel.add(label);
 		}
 
-		// menu.csv에서 식단을 읽어와서 표시한다.
+		// menu.csv에서 식단을 읽어와서 표시
 		String filePath = "menu/menu.csv";
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-			// CSV 파일의 각 줄을 읽어서 열 기준으로 요일에 맞는 위치에 추가
 			String line;
-			String[][] menuGrid = new String[5][5]; // 5행 5열로 구성된 배열
+			String[][] menuGrid = new String[5][5];
 			int rowIndex = 0;
 
 			while ((line = reader.readLine()) != null && rowIndex < 5) {
 				String[] menuItems = line.split(",");
 				for (int colIndex = 0; colIndex < menuItems.length && colIndex < 5; colIndex++) {
-					menuGrid[rowIndex][colIndex] = menuItems[colIndex]; // 각 항목을 배열에 저장
+					menuGrid[rowIndex][colIndex] = menuItems[colIndex];
 				}
 				rowIndex++;
 			}
 
-			// 저장된 데이터를 패널에 추가
-			for (int colIndex = 0; colIndex < 5; colIndex++) { // 각 열(요일)에 대해
-				for (rowIndex = 0; rowIndex < 5; rowIndex++) { // 각 행(데이터 줄)에 대해
+			for (int colIndex = 0; colIndex < 5; colIndex++) { // 각 열에 대해
+				for (rowIndex = 0; rowIndex < 5; rowIndex++) { // 각 행에 대해
 					JLabel label = new JLabel(menuGrid[rowIndex][colIndex]);
 					label.setHorizontalAlignment(SwingConstants.CENTER);
 					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
