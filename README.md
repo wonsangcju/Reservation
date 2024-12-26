@@ -14,7 +14,7 @@ Reservation 프로그램을 사용하면 학생 식당에 가기 전에 오늘�
 
 3. 프로그램 수행 절차
 3.1 클래스 다이어그램
-![image](https://github.com/user-attachments/assets/a9d79438-6bb7-4a35-a539-1a04c9d45de5)
+![Reservatiom drawio](https://github.com/user-attachments/assets/a870c48f-d1f7-4b8b-ac2f-bf0a2e268325)
 
 3.2 절차 설명
 
