@@ -216,7 +216,7 @@ public class Main extends JFrame {
 
 		// 예약취소 버튼
 		cancelButton = new JButton();
-		new decorateButton(cancelButton, checkPanel, "예약 취소", 80, 80, 80, listeners.new CancelButtonListener());
+		new decorateButton(cancelButton, checkPanel, "예약 취소", 80, 80, 80, listeners.new CancelButtonListener(this));
 		cancelButton.setPreferredSize(new Dimension(100, 50));
 
 	}
@@ -435,7 +435,6 @@ public class Main extends JFrame {
 
 		seatReservationMap.put(seat, timestamp);
 		saveCSV();
-		System.out.println("예약 완료 좌석 = " + seat + ", 시간 = " + timestamp);
 	}
 
 	public void cancelReservation(String seat) {
@@ -450,9 +449,9 @@ public class Main extends JFrame {
 		 */
 		if (seatReservationMap.containsKey(seat)) {
 			seatReservationMap.remove(seat);
-			System.out.println("예약 취소 완료 좌석 = " + seat);
+			sentence.setText("예약 취소 완료: 좌석=" + seat);
 		} else {
-			System.out.println("취소할 예약이 없습니다");
+			sentence.setText("취소할 예약이 없습니다: 좌석=" + seat);
 		}
 
 		saveCSV();
