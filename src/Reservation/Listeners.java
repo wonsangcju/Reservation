@@ -20,6 +20,8 @@ public class Listeners {
 	/**
 	 * 리스너를 모아놓은 클래스
 	 * 
+	 * @param mainApp 버튼, 라벨, 메소드 등을 호출할 메인 클래스
+	 * 
 	 * @changelog
 	 *            <ul>
 	 *            <li>2024.12.23 23:00 최초 생성</li>
@@ -52,29 +54,13 @@ public class Listeners {
 		}
 	}
 
+	//예약취소 버튼 리스너
 	public class CancelButtonListener implements ActionListener {
-		/**
-		 * 예약 취소 리스너
-		 * 
-		 * @param main 메소드를 가져올 메인 클래스
-		 * 
-		 * @changelog
-		 *            <ul>
-		 *            <li>2024.12.22 16:00 최초 생성</li>
-		 *            </ul>
-		 */
-	    private Main main;
-
-	    public CancelButtonListener(Main main) {
-	        this.main = main;
-	    }
-
-	    @Override
 	    public void actionPerformed(ActionEvent e) {
-	        if (!main.selectedSeat.isEmpty()) {
-	        	main.cancelReservation(main.selectedSeat); // 메인 클래스의 메소드 호출
-	        	main.selectedSeat = "";
-	        	main.cardLayout.show(main.getContentPane(), "Main");
+	        if (!mainApp.selectedSeat.isEmpty()) {
+	        	mainApp.cancelReservation(mainApp.selectedSeat); // 메인 클래스의 메소드 호출
+	        	mainApp.selectedSeat = "";
+	        	mainApp.cardLayout.show(mainApp.getContentPane(), "Main");
 	        } else {
 	        }
 	    }
